@@ -1,0 +1,24 @@
+# Ignorar archivos de entorno
+*.env
+.env
+
+# Ignorar caché de Python
+__pycache__/
+*.py[cod]
+
+# Archivos de sistema y editores comunes
+.DS_Store
+*.swp
+*.swo
+
+# Ignorar migraciones (opcional, dependiendo del flujo)
+*/migrations/*.pyc
+*/migrations/*.pyo
+*/migrations/__pycache__/
+
+# Ignorar archivos de base de datos SQLite
+*.sqlite3
+
+# Ignorar archivos de logs
+*.log
+
