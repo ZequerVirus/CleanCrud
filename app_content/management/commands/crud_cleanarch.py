@@ -8,7 +8,6 @@ from app_content.infraestructure.generators.Python.repositoryimpl import PythonR
 from app_content.infraestructure.generators.Python.view import PythonView
 
 import os
-import re
 import traceback
 from app_content.infraestructure.mappers.djangofieldmapper import DjangoFieldMapper
 
