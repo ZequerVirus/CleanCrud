@@ -44,5 +44,6 @@ class GenerateFiles:
             self.usecase.execute(model=model, basepath=self.base_path,)
             self.repository.execute(model=model, basepath=self.base_path,)
             self.repository_impl.execute(model=model, basepath=self.base_path,)
+            self.view.execute(model=model, basepath=self.base_path,)
         except Exception as e:
             raise Exception(e)
