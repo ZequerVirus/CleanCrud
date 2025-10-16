@@ -22,3 +22,8 @@ __pycache__/
 # Ignorar archivos de logs
 *.log
 
+# Ignorar vscode config
+.vscode
+*.vscode
+
+prueba/
