@@ -12,7 +12,7 @@ class PythonView(View):
         file_path = os.path.join(path, f"{model.nombre}_view.py")
         try:
             with open(file_path, "w") as f:
-                f.write(f"from {basepath.replace('/','.')}.application.usecase.{model.nombre}_usecase import {nombre}UseCase\n")
+                f.write(f"from {basepath.replace('/','.')}.application.usecases.{model.nombre}_usecase import {nombre}UseCase\n")
                 f.write(f"from {basepath.replace('/','.')}.infraestructure.repositories.django{model.nombre}_repository import Django{nombre}Repository\n")
                 f.write(f"from rest_framework.views import APIView\n")
                 f.write(f"from rest_framework.response import Response\n")
@@ -41,7 +41,7 @@ class PythonView(View):
             f"        if isinstance(data, list):\n"
             f"            created = []\n"
             f"            failed = []\n"
-            f"            for idx, item in ennumerate(data):\n"
+            f"            for idx, item in enumerate(data):\n"
             f"                try:\n"
             f"                    obj = obj_crud.create({", ".join([f'{field.nombre}=item.get(\'{field.nombre}\')' for field in model.fields])})\n"
             f"                    if obj:\n"
@@ -67,7 +67,7 @@ class PythonView(View):
     
     def get(self, model: ModelEntity, nombre:str):
         return (
-            f"    get(self, request, id=None):\n"
+            f"    def get(self, request, id=None):\n"
             f"        obj_crud = {nombre}UseCase(repository=Django{nombre}Repository())\n"
             f"        try:\n"
             f"            query_params = request.query_params.dict()\n"
