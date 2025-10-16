@@ -6,7 +6,7 @@ class PythonView(View):
     def execute(self, model: ModelEntity, basepath: str,):
         ''' Generate the files for the model '''
         nombre = f"{model.nombre[0].capitalize()}{model.nombre[1:]}"
-        path = os.path.join(basepath, "application", "views")
+        path = os.path.join(basepath, "presentation", "views")
         os.makedirs(path, exist_ok=True)
 
         file_path = os.path.join(path, f"{model.nombre}_view.py")

@@ -69,7 +69,7 @@ class PythonUseCase(UseCase):
                 f"                if key in data and key != 'id':\n"
                 f"                    data[key] = value\n"
                 f"            obj = {nombre}Entity(**data)\n"
-                f"            return repository.save(obj)\n"
+                f"            return self.repository.save(obj)\n"
                 f"        except Exception as e:\n"
                 f"            raise Exception(f\"No se pudo actualizar el registro: {{e}}\")\n"
                 )
@@ -82,7 +82,7 @@ class PythonUseCase(UseCase):
                 f"            obj = self.repository.get_by_id(id)\n"
                 f"            if not obj:\n"
                 f"                raise Exception(\"No se encontraron registros\")\n"
-                f"            return repository.delete(id)\n"
+                f"            return self.repository.delete(id)\n"
                 f"        except Exception as e:\n"
                 f"            raise Exception(f\"No se pudo eliminar el registro: {{e}}\")\n"
                 )
