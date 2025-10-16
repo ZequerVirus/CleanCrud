@@ -24,6 +24,7 @@ class PythonRepositoryImpl(RepositoryImpl):
                 
                 f.write(f"{self.map( model=model, nombre=nombre)}\n")
                 f.write(f"{self.save(model=model, nombre=nombre)}\n")
+                f.write(f"{self.get(model=model, nombre=nombre)}\n")
                 f.write(f"{self.get_by_id(model=model, nombre=nombre)}\n")
                 f.write(f"{self.exists_by_id(model=model, nombre=nombre)}\n")
                 f.write(f"{self.get_all(model=model, nombre=nombre)}\n")
@@ -63,6 +64,17 @@ class PythonRepositoryImpl(RepositoryImpl):
             f"            return _map_to_entity(instance)\n"
             f"        except Exception as e:\n"
             f"            raise Exception(f\"No se pudo guardar el registro: {{e}}\")\n"
+        )
+        
+    def get(self, model: ModelEntity, nombre:str)->str:
+        return (
+            f"    def get(self, **kwargs)-> list[{nombre}Entity]| {nombre}Entity:\n"
+            f"        try:\n"
+            f"            kwargs.pop(\"deleted_at\", None)\n"
+            f"            kwargs.pop(\"password\", None)\n"
+            f"            return [_map_to_entity(instance) for instance in {nombre}.objects.filter(**kwargs, deleted_at=None)]\n"
+            f"        except Exception as e:\n"
+            f"            raise Exception(f\"No se pudo obtener el registro: {{e}}\")\n"
         )
     
     def get_by_id(self,model: ModelEntity, nombre:str)->str:

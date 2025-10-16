@@ -67,10 +67,13 @@ class PythonView(View):
     
     def get(self, model: ModelEntity, nombre:str):
         return (
-            f"    get(self, request):\n"
+            f"    get(self, request, id=None):\n"
             f"        obj_crud = {nombre}UseCase(repository=Django{nombre}Repository())\n"
             f"        try:\n"
-            f"            obj = obj_crud.get(request.query_params.get('id'))\n"
+            f"            query_params = request.query_params.dict()\n"
+            f"            if id:\n"
+            f"                query_params['id'] = id\n"
+            f"            obj = obj_crud.get(**query_params)\n"
             f"            if isinstance(obj, list):\n"
             f"                data = [item.__dict__ for item in obj]\n"
             f"            else:\n"

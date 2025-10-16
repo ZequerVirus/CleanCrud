@@ -22,6 +22,7 @@ class PythonRepository(Repository):
                 
                 f.write(f"{self.save(model=model, nombre=nombre)}\n")
                 f.write(f"{self.get_by_id(model=model, nombre=nombre)}\n")
+                f.write(f"{self.get(model=model, nombre=nombre)}\n")
                 f.write(f"{self.exists_by_id(model=model, nombre=nombre)}\n")
                 f.write(f"{self.get_all(model=model, nombre=nombre)}\n")
                 f.write(f"{self.delete(model=model, nombre=nombre)}\n")
@@ -32,6 +33,13 @@ class PythonRepository(Repository):
         return (
             f"    @abstractmethod\n"
             f"    def save(self, obj: {nombre}Entity)-> {nombre}Entity:\n"
+            f"        pass\n"
+        )
+        
+    def get(self, model:ModelEntity, nombre:str)->str:
+        return (
+            f"    @abstractmethod\n"
+            f"    def get(self, **kwargs)->list[{nombre}Entity] | {nombre}Entity:\n"
             f"        pass\n"
         )
     

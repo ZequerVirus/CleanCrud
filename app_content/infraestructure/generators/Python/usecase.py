@@ -28,13 +28,14 @@ class PythonUseCase(UseCase):
             raise Exception(e)
             
     def get(self, model:ModelEntity, nombre:str):
-        return (f"    def get(self, id=None)->list[{nombre}Entity] | {nombre}Entity:\n"
+        return (f"    def get(self, **kwargs)->list[{nombre}Entity] | {nombre}Entity:\n"
                 f"        try:\n"
                 f"            if not id:\n"
                 f"                obj = repository.get_all()\n"
                 f"            else:\n"
-                f"                obj = repository.get_by_id(id)\n"
-                f"            if not obj:\n"
+                # f"                obj = repository.get_by_id(id)\n"
+                f"                obj = repository.get(**kwargs)\n"
+                f"            if obj is None:\n"
                 f"                raise Exception(\"No se encontraron registros\")\n"
                 f"            return obj\n"
                 f"        except Exception as e:\n"
