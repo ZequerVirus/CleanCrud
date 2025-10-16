@@ -1,2 +1,4 @@
+include app_content/*
+include crudcleanarch/*
 include README.md
 include LICENSE
