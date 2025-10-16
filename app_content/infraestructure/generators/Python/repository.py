@@ -14,7 +14,7 @@ class PythonRepository(Repository):
         try:
             with open(file_path, "w") as f:
                 f.write(f"from abc import ABC, abstractmethod\n")
-                f.write(f"from {basepath}.domain.entities.{model.nombre}_entity import {nombre}Entity\n\n")
+                f.write(f"from {basepath.replace('/', '.')}.domain.entities.{model.nombre}_entity import {nombre}Entity\n\n")
                 
                 f.write(f"class {nombre}Repository(ABC):\n")
                 f.write(f"    def __init__(self):\n")

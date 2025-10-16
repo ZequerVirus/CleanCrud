@@ -23,7 +23,7 @@ class GenerateFiles:
         # self.dto = dto
         self.model_name = model_name
         self.model_path = model_path
-        self.base_path = base_path
+        self.base_path = base_path[:-1] if base_path.endswith("/") else base_path
         self.fieldmapper = fieldmapper
         self.entity = entity
         self.usecase = usecase

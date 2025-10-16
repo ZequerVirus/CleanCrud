@@ -101,10 +101,13 @@ class DjangoFieldMapper(FieldMapper):
                 break  # fin de la clase
 
             # Buscar asignaciones a campos de Django: nombre = models.Tipo(...)
-            field_match = re.match(r"(\w+)\s*=\s*models\.(\w+)\(", stripped)
+            field_match = re.match(r"(\w+)\s*=\s*models\.(\w+)\((.*)\)", stripped)
             if field_match:
-                name, django_type = field_match.groups()
+                name, django_type, args = field_match.groups()
                 py_type = FIELD_TYPE_MAP.get(django_type, "unknown")
+                is_optional = "null=True" in args or "blank=True" in args
+                if is_optional:
+                    py_type = f"{py_type} | None"
                 fields.append(FieldEntity(nombre=name, tipo=py_type))
 
         return fields

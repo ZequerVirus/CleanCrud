@@ -13,9 +13,9 @@ class PythonRepositoryImpl(RepositoryImpl):
         file_path = os.path.join(path, f"django{model.nombre}_repository.py")
         try:
             with open(file_path, "w") as f:
-                f.write(f"from {basepath}.application.repositories.{model.nombre}_repository import {nombre}Repository\n")
-                f.write(f"from {basepath}.domain.entities.{model.nombre}_entity import {nombre}Entity\n\n")
-                f.write(f"from {basepath}.models import {model.nombre}\n")
+                f.write(f"from {basepath.replace('/','.')}.application.repositories.{model.nombre}_repository import {nombre}Repository\n")
+                f.write(f"from {basepath.replace('/','.')}.domain.entities.{model.nombre}_entity import {nombre}Entity\n\n")
+                f.write(f"from {basepath.replace('/','.')}.models import {model.nombre}\n")
                 f.write(f"from django.utils import timezone\n\n")
 
                 f.write(f"class Django{nombre}Repository({nombre}Repository):\n")
@@ -39,7 +39,10 @@ class PythonRepositoryImpl(RepositoryImpl):
             f"            raise Exception(\"El objeto es obligatorio\")\n"
             f"        try:\n"
             f"            return {nombre}Entity(\n"
-            f"{",\n".join([f"                {field.nombre}=instance.{field.nombre}" for field in model.fields])}"
+            f"{",\n".join([f"                {field.nombre}=instance.{field.nombre}" for field in model.fields])}\n"
+            f"                created_at=instance.created_at,\n"
+            f"                updated_at=instance.updated_at,\n"
+            f"                deleted_at=instance.deleted_at,\n"
             f"            )\n"
             f"        except Exception as e:\n"
             f"            raise Exception(f\"No se pudo mapear el registro: {{e}}\")\n"
@@ -56,12 +59,12 @@ class PythonRepositoryImpl(RepositoryImpl):
             f"                instance.created_at = timezone.now()\n"
             f"            else:\n"
             f"                instance = {nombre}.objects.get(id=obj.id, deleted_at=None)\n"
-            f"{"\n".join([f'            instance.{field.nombre} = obj.{field.nombre}' for field in model.fields])}" 
+            f"{"\n".join([f'            instance.{field.nombre} = obj.{field.nombre}' for field in model.fields])}\n" 
             f"            instance.updated_at = timezone.now()\n"
             f"            instance.deleted_at = instance.deleted_at\n"
             f"            instance.created_at = instance.created_at\n"
             f"            instance.save()\n"
-            f"            return _map_to_entity(instance)\n"
+            f"            return self._map_to_entity(instance)\n"
             f"        except Exception as e:\n"
             f"            raise Exception(f\"No se pudo guardar el registro: {{e}}\")\n"
         )
@@ -72,7 +75,7 @@ class PythonRepositoryImpl(RepositoryImpl):
             f"        try:\n"
             f"            kwargs.pop(\"deleted_at\", None)\n"
             f"            kwargs.pop(\"password\", None)\n"
-            f"            return [_map_to_entity(instance) for instance in {nombre}.objects.filter(**kwargs, deleted_at=None)]\n"
+            f"            return [self._map_to_entity(instance) for instance in {nombre}.objects.filter(**kwargs, deleted_at=None)]\n"
             f"        except Exception as e:\n"
             f"            raise Exception(f\"No se pudo obtener el registro: {{e}}\")\n"
         )
@@ -83,7 +86,7 @@ class PythonRepositoryImpl(RepositoryImpl):
             f"        if not id:\n"
             f"            raise Exception(\"El id es obligatorio\")\n"
             f"        try:\n"
-            f"            return _map_to_entity({nombre}.objects.get(id=id, deleted_at=None))\n"
+            f"            return self._map_to_entity({nombre}.objects.get(id=id, deleted_at=None))\n"
             f"        except Exception as e:\n"
             f"            raise Exception(f\"No se pudo obtener el registro: {{e}}\")\n"
         )
@@ -103,7 +106,7 @@ class PythonRepositoryImpl(RepositoryImpl):
         return (
             f"    def get_all(self)-> list[{nombre}Entity]:\n"
             f"        try:\n"
-            f"            return [_map_to_entity(instance) for instance in {nombre}.objects.filter(deleted_at=None)]\n"
+            f"            return [self._map_to_entity(instance) for instance in {nombre}.objects.filter(deleted_at=None)]\n"
             f"        except Exception as e:\n"
             f"            raise Exception(f\"No se pudo obtener el registro: {{e}}\")\n"
         )

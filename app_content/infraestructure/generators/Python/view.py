@@ -12,8 +12,8 @@ class PythonView(View):
         file_path = os.path.join(path, f"{model.nombre}_view.py")
         try:
             with open(file_path, "w") as f:
-                f.write(f"from {basepath}.application.usecase.{model.nombre}_usecase import {nombre}UseCase\n")
-                f.write(f"from {basepath}.infraestructure.repositories.{model.nombre}_repository import Django{nombre}Repository\n")
+                f.write(f"from {basepath.replace('/','.')}.application.usecase.{model.nombre}_usecase import {nombre}UseCase\n")
+                f.write(f"from {basepath.replace('/','.')}.infraestructure.repositories.django{model.nombre}_repository import Django{nombre}Repository\n")
                 f.write(f"from rest_framework.views import APIView\n")
                 f.write(f"from rest_framework.response import Response\n")
                 f.write(f"from rest_framework import status\n")

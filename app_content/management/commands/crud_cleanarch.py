@@ -6,8 +6,6 @@ from app_content.infraestructure.generators.Python.usecase import PythonUseCase
 from app_content.infraestructure.generators.Python.repository import PythonRepository
 from app_content.infraestructure.generators.Python.repositoryimpl import PythonRepositoryImpl
 from app_content.infraestructure.generators.Python.view import PythonView
-from app_content.domain.entities.model_entity import ModelEntity
-from app_content.domain.entities.data_entity import FieldEntity
 
 import os
 import re
@@ -18,9 +16,9 @@ class Command(BaseCommand):
     help = 'Generate CRUD clean architecture using a model'
 
     def add_arguments(self, parser: CommandParser) -> None:
-        parser.add_argument('--model', required=True, help='Model name to generate')
-        parser.add_argument('--basepath', required=True, help='Base path to generate')
-        parser.add_argument('--model_path', required=True, help='Path to the models.py file')
+        parser.add_argument('--model', required=True, help='Model name to generate (example: User)')
+        parser.add_argument('--basepath', required=True, help='Base path to generate (example: app_content)')
+        parser.add_argument('--model_path', required=True, help='Path to the models.py file (example: app_content/models.py) recomendado tenerlo dentro de basepath')
         parser.add_argument('--language', required=False, default='python', help='Language to generate (default: python)')
 
     def handle(self, *args, **options):
@@ -49,7 +47,7 @@ class Command(BaseCommand):
                         repository_impl= PythonRepositoryImpl(),
                         view= PythonView(),
                     )
-
+                    self.stdout.write(self.style.SUCCESS(f"🔥 Generating files for {model_name}..."))
                     generador.execute()
 
                     self.stdout.write(self.style.SUCCESS(f"✨ Files for {model_name} generated successfully!"))
