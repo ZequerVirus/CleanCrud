@@ -18,9 +18,6 @@ class PythonEntity(Entity):
                 f.write(f"class {nombre}Entity:\n")
                 for field in model.fields:
                     f.write(f"    {field.nombre}: {field.tipo}\n")
-                f.write(f"    created_at: str\n")
-                f.write(f"    updated_at: str\n")
-                f.write(f"    deleted_at: str | None\n")
                                 
         except Exception as e:
             raise Exception(e)
