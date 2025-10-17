@@ -59,7 +59,7 @@ class PythonRepositoryImpl(RepositoryImpl):
             f"                instance.created_at = timezone.now()\n"
             f"            else:\n"
             f"                instance = {nombre}.objects.get(id=obj.id, deleted_at=None)\n"
-            f"{"\n".join([f'            instance.{field.nombre} = obj.{field.nombre}' for field in model.fields])}\n" 
+            f"{"\n".join([f'            instance.{field.nombre} = obj.{field.nombre}' for field in model.fields if field.nombre != 'id'])}\n" 
             f"            instance.updated_at = timezone.now()\n"
             f"            instance.deleted_at = instance.deleted_at\n"
             f"            instance.created_at = instance.created_at\n"
