@@ -21,8 +21,8 @@ class PythonView(View):
 
                 f.write(f"class {nombre}View(APIView):\n")
                 f.write(f"    permission_classes = [AllowAny]\n")
-                f.write(f"    def __init__(self, repository: Django{nombre}Repository):\n")
-                f.write(f"        repository = repository\n\n")
+                f.write(f"    def __init__(self):\n")
+                f.write(f"        pass\n\n")
 
                 f.write(f"{self.get(model=model, nombre=nombre)}\n")
                 f.write(f"{self.post(model=model, nombre=nombre)}\n")
