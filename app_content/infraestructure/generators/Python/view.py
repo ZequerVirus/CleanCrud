@@ -32,6 +32,11 @@ class PythonView(View):
             raise Exception(e)
         
     def post(self,model: ModelEntity, nombre:str):
+        campos = []
+        for field in model.fields:
+            if field.nombre != 'id':
+                campos.append(field)
+
         return (
             f"    def post(self, request):\n"
             f"        if not request.data:\n"
@@ -43,7 +48,7 @@ class PythonView(View):
             f"            failed = []\n"
             f"            for idx, item in enumerate(data):\n"
             f"                try:\n"
-            f"                    obj = obj_crud.create({", ".join([f'{field.nombre}=item.get(\'{field.nombre}\')' for field in model.fields])})\n"
+            f"                    obj = obj_crud.create({(','.join([f'{field.nombre}=item.get(\"{field.nombre}\")' for field in campos]))})\n"
             f"                    if obj:\n"
             f"                        created.append({{'index': idx, 'id': obj.id}})\n"
             f"                    else:\n"
@@ -58,7 +63,7 @@ class PythonView(View):
             f"            else:\n"
             f"                return Response({{'failed': failed}}, status=status.HTTP_400_BAD_REQUEST)\n"
             f"        try:\n"
-            f"            obj = obj_crud.create({", ".join([f'{field.nombre}=data.get(\'{field.nombre}\')' for field in model.fields])})\n"
+            f"            obj = obj_crud.create({", ".join([f'{field.nombre}=data.get(\'{field.nombre}\')' for field in campos])})\n"
             f"            return Response({{'obj': obj.id}}, status=status.HTTP_201_CREATED)\n"
             f"        except Exception as e:\n"
             f"            return Response({{'error': str(e)}}, status=status.HTTP_400_BAD_REQUEST)\n"

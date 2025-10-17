@@ -43,14 +43,21 @@ class PythonUseCase(UseCase):
                 )
     
     def create(self, model:ModelEntity, nombre:str):
-        return (f"    def create(self, {' '.join([(f'{field.nombre}:{field.tipo},' if field.nombre != 'id' \
-                                            else '')  for field in model.fields])})-> {nombre}Entity:\n"
-                f"        if not all([{' '.join([(f'{field.nombre},' if not field.tipo.__contains__('None') else '') for field in model.fields])}]):\n"
+        campos1 = []
+        campos2 = []
+        for field in model.fields:
+            if field.nombre != 'id':
+                campos1.append(field)
+            if not field.tipo.__contains__('None') and field.nombre != 'id':
+                campos2.append(field)
+
+        return (f"    def create(self, {', '.join([f'{field.nombre}:{field.tipo}' for field in campos1])})-> {nombre}Entity:\n"
+                f"        if not all([{(', ').join([f'{field.nombre}' for field in campos2])}]):\n"
                 f"            raise Exception(\"Todos los campos son obligatorios\")\n"
                 f"        try:\n"
-                f"            obj = self.repository.save(\n{nombre}Entity(\n\
-                {',\n'.join([f'                {field.nombre}={field.nombre}' if field.nombre != 'id' else\
-                              f'                {field.nombre}=None' for field in model.fields])}\n)\n)\n"
+                f"            obj = self.repository.save({nombre}Entity(\n{',\n'.join([\
+                f"                {field.nombre}={field.nombre if field.nombre != 'id'\
+                                  else 'None'}" for field in model.fields])}))\n"
                 f"            if not obj:\n"
                 f"                raise Exception(\"No se pudo crear el registro\")\n"
                 f"            return obj\n"
