@@ -17,7 +17,7 @@ class PythonEntity(Entity):
                 f.write(f"@dataclass(kw_only=True)\n")
                 f.write(f"class {nombre}Entity:\n")
                 for field in model.fields:
-                    f.write(f"    {field.nombre}: {field.tipo}\n")
+                    f.write(f"    {field.nombre}: {field.tipo if field.tipo != 'id' else field.tipo+' | None'}\n")
                                 
         except Exception as e:
             raise Exception(e)

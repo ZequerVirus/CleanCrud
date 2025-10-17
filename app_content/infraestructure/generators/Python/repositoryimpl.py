@@ -39,7 +39,7 @@ class PythonRepositoryImpl(RepositoryImpl):
             f"            raise Exception(\"El objeto es obligatorio\")\n"
             f"        try:\n"
             f"            return {nombre}Entity(\n"
-            f"{",\n".join([f"                {field.nombre}=instance.{field.nombre}" for field in model.fields])}\n"
+            f"{",\n".join([f"                {field.nombre}=instance.{field.nombre}" for field in model.fields])},\n"
             f"                created_at=instance.created_at,\n"
             f"                updated_at=instance.updated_at,\n"
             f"                deleted_at=instance.deleted_at,\n"
