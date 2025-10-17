@@ -107,10 +107,12 @@ class PythonView(View):
     
     def delete(self, model: ModelEntity, nombre:str):
         return (
-            f"    def delete(self, request):\n"
+            f"    def delete(self, request, id=None):\n"
             f"        obj_crud = {nombre}UseCase(repository=Django{nombre}Repository())\n"
             f"        try:\n"
-            f"            obj = obj_crud.delete(request.query_params.get('id'))\n"
+            f"            if not id:\n"
+            f"                id = request.query_params.get('id')\n"
+            f"            obj = obj_crud.delete(id=id)\n"
             f"            if obj:\n"
             f"                return Response({{'success': obj}}, status=status.HTTP_200_OK)\n"
             f"            return Response({{'success': obj}}, status=status.HTTP_200_OK)\n"
