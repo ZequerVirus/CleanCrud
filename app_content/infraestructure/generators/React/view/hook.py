@@ -30,7 +30,7 @@ class ReactHook:
     
     def __hookprops(self, model: ModelEntity, nombre: str)->str:
         return (
-            f"type UserHookProps = {{\n"
+            f"type {nombre}HookProps = {{\n"
             f"  items: {nombre}Entity[],\n"
             f"  loading: boolean,\n"
             f"  message: string,\n"
@@ -40,7 +40,7 @@ class ReactHook:
     
     def __hook(self, model: ModelEntity, nombre: str)->str:
         return (
-            f"export const UserHook = () => {{\n"
+            f"export const {nombre}Hook = () => {{\n"
             f"  const [state, setState] = useState<UserHookProps>({{\n"
             f"    items: [],\n"
             f"    loading: false,\n"

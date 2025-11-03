@@ -51,14 +51,14 @@ class ReactForm:
             
             f"useEffect(() => {{\n"
             f"  if (initial{nombre}) {{\n"
-            f"    setItem(initial{nombre});\n"
+            f"    setItem(prev => ({{...prev, initial{nombre}:initial{nombre}}}));\n"
             f"  }}\n"
             f"}}, [initial{nombre}]);\n"
             f"\n"
             
             f"const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {{\n"
             f"  const {{name, value}} = e.target;\n"
-            f"  setItem({{...item, [name]: value}});\n"
+            f"  setItem(prev => {{...prev, [name]: value}});\n"
             f"}}\n"
             f"\n"
 

@@ -53,7 +53,7 @@ class ReactTable:
             f"          </tr>\n"
             f"        </thead>\n"
             f"        <tbody>\n"
-            f"          {{visibleitems.map((item) => (\n"
+            f"          {{visibleItems.map((item) => (\n"
             f"            <tr key={{item.id}}>\n"
             f"{('\n').join([f"              <td>{field.nombre}</td>" for field in model.fields])}\n"
             f"              <td className=\"text-end\">\n"
