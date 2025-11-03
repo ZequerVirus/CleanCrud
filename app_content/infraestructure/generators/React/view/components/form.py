@@ -32,7 +32,7 @@ class ReactForm:
         return (
             f"type {nombre}FormProps = {{\n"
             f"  initial{nombre}?: {nombre}Entity;\n"
-            f"  onSubmit: (value: any|{nombre}Entity) => void;\n"
+            f"  onSubmit: (item: any|{nombre}Entity) => void;\n"
             f"  onCancel: () => void;\n"
             f"}}\n"
         )
@@ -41,34 +41,37 @@ class ReactForm:
         ''' Generate the form for the file'''
         return (
             f"function {nombre}Form({{initial{nombre}, onSubmit, onCancel}}: {nombre}FormProps) {{\n"
-            f"    const [value, setValue] = useState<{nombre}Entity>(\n"
+            f"    const [item, setItem] = useState<{nombre}Entity>(\n"
             f"        initial{nombre} ||\n"
             f"        {{\n"
             f"{(',\n').join([f'        {field.nombre}: {f"{self.__empty(field.tipo)}" if field.nombre != "id" else "null"}' for field in model.fields])}\n"
             f"        }}\n"
             f"    );\n"
             f"\n"
+            
             f"useEffect(() => {{\n"
             f"  if (initial{nombre}) {{\n"
-            f"    setValue(initial{nombre});\n"
+            f"    setItem(initial{nombre});\n"
             f"  }}\n"
             f"}}, [initial{nombre}]);\n"
             f"\n"
-            f"const handleChange = (e: React.ChangeEvent<HTMLFieldElement | HTMLSelectElement>) => {{\n"
+            
+            f"const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {{\n"
             f"  const {{name, value}} = e.target;\n"
-            f"  setValue({{...value, [name]: value}});\n"
+            f"  setItem({{...item, [name]: value}});\n"
             f"}}\n"
             f"\n"
+
             f"const handleSubmit = (e: React.FormEvent) => {{\n"
             f"  e.preventDefault();\n"
-            f"  if ({(' || \n').join([f'!value.{field.nombre
+            f"  if ({(' || \n').join([f'!item.{field.nombre
                                     if field.tipo != 'string' else f"{field.nombre}.trim()"}' 
                                     for field in model.fields 
                                     if field.nombre != 'id' and not field.tipo.__contains__('null')])}){{\n"
             f"    alert(\"Todos los campos son obligatorios\");\n"
             f"    return;\n"
             f"  }}\n"
-            f"onSubmit(value);\n"
+            f"onSubmit(item);\n"
             f"}};\n"
             f"\n"
             f"return (\n"
@@ -81,7 +84,7 @@ class ReactForm:
         return (
             f"<div className=\"d-flex justify-content-end gap-2\">\n"
             f"{{onCancel && (<button type=\"button\" className=\"btn btn-outline-secondary\" onClick={{\"onCancel\"}}>Cancelar</button>)}}\n"
-            f"<button type=\"submit\" className=\"btn btn-primary\" onClick={{()=>handleSubmit(value)}}>{{initial{model.nombre}? \"Editar {model.nombre}\": \"Crear {model.nombre}\"}}</button>\n"
+            f"<button type=\"submit\" className=\"btn btn-primary\" onClick={{()=>handleSubmit(item)}}>{{initial{model.nombre}? \"Editar {model.nombre}\": \"Crear {model.nombre}\"}}</button>\n"
             f"</div>\n"
         )
     
@@ -117,34 +120,34 @@ class ReactForm:
             case "string":
                 match name:
                     case "phone" | "telefono":
-                        return f"<PhoneField onChange={{handleChange}} value={{value.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} name=\"{name}\" label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''} />"
+                        return f"<PhoneField onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} name=\"{name}\" label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''} />"
             
                     case "email":
-                        return f"<EmailField onChange={{handleChange}} value={{value.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}}/>"
+                        return f"<EmailField onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}}/>"
             
                     case "password":
-                        return f"<PasswordField onChange={{handleChange}} value={{value.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}}/>"
+                        return f"<PasswordField onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}}/>"
             
                     case _:
                         if name.lower().__contains__('date') or name.__contains__('fecha'):
-                            return f"<DateField name={{{name}}} onChange={{handleChange}} value={{value.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
-                        return f"<TextField onChange={{handleChange}} value={{value.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
+                            return f"<DateField name={{{name}}} onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
+                        return f"<TextField onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
             
             case "number":
-                return f"<NumberField name={{{name}}} onChange={{handleChange}} value={{value.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
+                return f"<NumberField name={{{name}}} onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
             
             case "boolean":
-                return f"<SelectedField name={{{name}}} onChange={{handleChange}} value={{value.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" options=[{{label: 'Si', value: true}}, {{label: 'No', value: false}}] {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
+                return f"<SelectedField name={{{name}}} onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" options=[{{label: 'Si', value: true}}, {{label: 'No', value: false}}] {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
             
             case "Date":
-                return f"<DateField name={{{name}}} onChange={{handleChange}} value={{value.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
+                return f"<DateField name={{{name}}} onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
             
             case "array":
-                return f"<SelectedField name={{{name}}} onChange={{handleChange}} value={{value.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" options=[] {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
+                return f"<SelectedField name={{{name}}} onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" options=[] {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
             
             case "object":
-                return f"<SelectedField name={{{name}}} onChange={{handleChange}} value={{value.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" options=[] {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
+                return f"<SelectedField name={{{name}}} onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" options=[] {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
             
             case _:
-                return f"<TextField name={{{name}}} onChange={{handleChange}} value={{value.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
+                return f"<TextField name={{{name}}} onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {'required={{true}}' if not typefield.__contains__('null') else ''}/>"
             
