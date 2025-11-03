@@ -61,6 +61,12 @@ class DjangoFieldMapper(FieldMapper):
                 is_optional = "null=True" in args or "blank=True" in args
                 if is_optional:
                     py_type = f"{py_type}?"
+            case 'react':
+                py_type = FIELD_TYPE_MAP.get(django_type, "any")
+                is_optional = "null=True" in args or "blank=True" in args
+                if is_optional:
+                    # py_type = f"{py_type} | undefined"
+                    py_type = f"{py_type} | null"
             case _:
                 raise Exception("Language not supported")
         return FieldEntity(nombre=name, tipo=py_type)
@@ -72,6 +78,8 @@ class DjangoFieldMapper(FieldMapper):
                 dft.topythonfield()
             case 'flutter':
                 dft.toflutterfield()
+            case 'react':
+                dft.toreactfield()
             case _:
                 raise Exception("Language not supported")
         return dft.types

@@ -67,6 +67,27 @@ class DjangoFieldType(FieldType):
     def topythonfield(self):
         self.types = self.PYTHON_FIELDS.copy()
 
+    def toreactfield(self,):
+        react_types = {
+            "str": "string",
+            "int": "number",
+            "float": "number",
+            "bool": "boolean",
+            "datetime": "string",
+            "date": "string",
+            "time": "string",
+            "timedelta": "string",
+            "bytes": "string",
+            "uuid": "string",
+            "dict": "object",
+            "list": "array",
+        }
+
+        self.types = {
+            django_type: react_types.get(python_type, "any")
+            for django_type, python_type in self.PYTHON_FIELDS.items()
+        }
+
     def toflutterfield(self, ):
         flutter_types = {
             "str": "String",

@@ -14,7 +14,7 @@ class PythonRepositoryImpl(RepositoryImpl):
         try:
             with open(file_path, "w") as f:
                 f.write(f"from {basepath.replace('/','.')}.application.repositories.{model.nombre}_repository import {nombre}Repository\n")
-                f.write(f"from {basepath.replace('/','.')}.domain.entities.{model.nombre}_entity import {nombre}Entity\n\n")
+                f.write(f"from {basepath.replace('/','.')}.domain.entities.{model.nombre}_entity import {nombre}Entity\n")
                 f.write(f"from {basepath.replace('/','.')}.models import {model.nombre}\n")
                 f.write(f"from django.utils import timezone\n\n")
 

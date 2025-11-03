@@ -15,6 +15,12 @@ from app_content.infraestructure.generators.flutter.bloc.event import FlutterEve
 from app_content.infraestructure.generators.flutter.bloc.state import FlutterState
 from app_content.infraestructure.generators.flutter.usecase import FlutterUseCase
 from app_content.infraestructure.generators.flutter.entity import FlutterEntity
+from app_content.infraestructure.generators.React.entity import ReactEntity
+from app_content.infraestructure.generators.React.view.view import ReactView
+from app_content.infraestructure.generators.React.view.components.form import ReactForm
+from app_content.infraestructure.generators.React.view.components.table import ReactTable
+from app_content.infraestructure.generators.React.view.hook import ReactHook
+from app_content.infraestructure.generators.React.usecase import ReactUseCase
 
 class Command(BaseCommand):
     help = 'Generate CRUD clean architecture using a model'
@@ -64,6 +70,29 @@ class Command(BaseCommand):
                         repository_impl= PythonRepositoryImpl(),
                         view= PythonView(),
                         
+                    )
+                    self.stdout.write(self.style.SUCCESS(f"🔥 Generating files for {model_name}..."))
+                    generador.execute()
+
+                    self.stdout.write(self.style.SUCCESS(f"✨ Files for {model_name} generated successfully!"))
+
+                except Exception as e:
+                    tb = traceback.format_exc()
+                    raise CommandError(f"Error generating files: {e}\n{tb}")
+            case 'react':
+                try:
+                    generador = GenerateFiles(
+                        model_name= model_name,
+                        model_path= model_path,
+                        base_path=base_path,
+                        fieldmapper=fieldmapper,
+                        language_to_map="react",
+                        entity= ReactEntity(),
+                        view= ReactView(),
+                        form= ReactForm(),
+                        table= ReactTable(),
+                        hook= ReactHook(),
+                        usecase= ReactUseCase(),
                     )
                     self.stdout.write(self.style.SUCCESS(f"🔥 Generating files for {model_name}..."))
                     generador.execute()

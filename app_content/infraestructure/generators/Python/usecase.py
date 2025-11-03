@@ -53,7 +53,7 @@ class PythonUseCase(UseCase):
 
         return (f"    def create(self, {', '.join([f'{field.nombre}:{field.tipo}' for field in campos1])})-> {nombre}Entity:\n"
                 f"        if not all([{(', ').join([f'{field.nombre}' for field in campos2])}]):\n"
-                f"            raise Exception(\"Todos los campos son obligatorios\")\n"
+                f"            raise Exception(\"Todos los campos son obligatorios: {', '.join([f'{field.nombre}' for field in campos2])}\")\n"
                 f"        try:\n"
                 f"            obj = self.repository.save({nombre}Entity(\n{',\n'.join([\
                 f"                {field.nombre}={field.nombre if field.nombre != 'id'\
