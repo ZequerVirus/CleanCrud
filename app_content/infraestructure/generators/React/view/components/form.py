@@ -134,7 +134,7 @@ class ReactForm:
                         return f"<TextField name={{'{name}'}} onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {f'required={{true}}' if not typefield.__contains__('null') else ''}/>"
             
             case "number":
-                return f"<NumberField name={{'{name}'}} onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" {f'required={{true}}' if not typefield.__contains__('null') else ''}/>"
+                return f"<NumberField name={{'{name}'}} onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" {f'required={{true}}' if not typefield.__contains__('null') else ''}/>"
             
             case "boolean":
                 return f"<SelectedField name={{'{name}'}} onChange={{handleChange}} value={{item.{name if not typefield.__contains__('null') else f'{name}??{self.__empty(typefield)}'}}} label=\"{name}\" placeholder=\"{name}\" options=[{{label: 'Si', value: true}}, {{label: 'No', value: false}}] {f'required={{true}}' if not typefield.__contains__('null') else ''}/>"
