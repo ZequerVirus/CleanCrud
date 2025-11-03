@@ -59,7 +59,7 @@ class ReactUseCase:
         return (
             f"async create(data:any):Promise<any> {{\n"
             f"try{{\n"
-            f"const response = await this.api.post(`{nombre.lower()}`, {{\n"
+            f"const response = await this.api.post(`{nombre.lower()}/`, {{\n"
             f"{',\n'.join([f"          {field.nombre}: data.{field.nombre}" for field in model.fields])}\n"
             f"        }});\n"
             f"if (response.status < 200 || response.status > 299 ){{throw Error(`Error creando {model.nombre}`)}}\n"
@@ -81,7 +81,7 @@ class ReactUseCase:
         return (
             f"async update(id:string, data:any):Promise<any> {{\n"
             f"try{{\n"
-            f"const response = await this.api.put(`{nombre.lower()}`, id, {{\n"
+            f"const response = await this.api.put(`{nombre.lower()}/`, id, {{\n"
             f"{',\n'.join([f"          '{field.nombre}': data.{field.nombre}" for field in model.fields])}\n"
             f"        }});\n"
             f"if (response.status < 200 || response.status > 299 ){{throw Error(`Error actualizando {model.nombre}`)}}\n"

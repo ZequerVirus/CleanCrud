@@ -144,7 +144,7 @@ class ReactHook:
             f"    }}\n"
             f"    const lower=value.toLowerCase();\n"
             f"    const filtered = state.items.filter((item: {nombre}Entity) => {{\n"
-            f"      return {(' ||\n').join([f'item.{field.nombre}.toString().toLowerCase().includes(lower)' for field in model.fields])};\n"
+            f"      return {(' ||\n').join([f'item.{field.nombre if field.tipo.__contains__('null') else f'{field.nombre}?'}.toString().toLowerCase().includes(lower)' for field in model.fields])};\n"
             f"    }});\n"
             f"    setState(prev => ({{ ...prev, filtered: filtered }}));\n"
             f"  }};\n"
