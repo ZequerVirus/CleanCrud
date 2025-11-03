@@ -56,7 +56,7 @@ class ReactTable:
             f"        <tbody>\n"
             f"          {{visibleItems.map((item) => (\n"
             f"            <tr key={{item.id}}>\n"
-            f"{('\n').join([f"              <td>{field.nombre}</td>" for field in model.fields])}\n"
+            f"{('\n').join([f"              <td>{{{field.nombre}}}</td>" for field in model.fields])}\n"
             f"              <td className=\"text-end\">\n"
             f"                <button className=\"btn btn-sm btn-outline-warning me-2\" onClick={{() => editItem(item)}}>\n"
             f"                  <i className=\"bi bi-pencil-square\"></i> Editar\n"
