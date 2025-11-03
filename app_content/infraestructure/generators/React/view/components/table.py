@@ -29,17 +29,18 @@ class ReactTable:
         return (
             f"type {nombre}TableProps = {{\n"
             f"    {model.nombre}: {model.nombre}Entity[];\n"
-            f"    edititem: ({model.nombre}: {model.nombre}Entity) => void;\n"
-            f"    deleteitem: ({model.nombre}: {model.nombre}Entity) => void;\n"
+            f"    editItem: ({model.nombre}: {model.nombre}Entity) => void;\n"
+            f"    deleteItem: ({model.nombre}: {model.nombre}Entity) => void;\n"
             f"}}\n"
         )
     
     def __table(self, model:ModelEntity, nombre:str, basepath:str)->str:
         ''' Generate the interface for the file '''
         return (
-            f"function {nombre}Table({{ {model.nombre}, edititem, deleteitem }}: {nombre}TableProps) {{\n"
+            f"function {nombre}Table({{ {model.nombre}, editItem, deleteItem }}: {nombre}TableProps) {{\n"
             f"  const [currentPage, setCurrentPage] = useState(1);\n"
             f"  const [itemsPerPage] = useState(10);\n"
+            f"  const totalPages = Math.ceil({model.nombre}.length / itemsPerPage);\n"
             f"  const startIndex = (currentPage - 1) * itemsPerPage;\n"
             f"  const visibleItems = {model.nombre}.slice(startIndex, startIndex + itemsPerPage);\n"
             f"  const handlePrev = () => setCurrentPage((prev)=> Math.max(prev-1, 1));\n"
@@ -57,10 +58,10 @@ class ReactTable:
             f"            <tr key={{item.id}}>\n"
             f"{('\n').join([f"              <td>{field.nombre}</td>" for field in model.fields])}\n"
             f"              <td className=\"text-end\">\n"
-            f"                <button className=\"btn btn-sm btn-outline-warning me-2\" onClick={{() => edititem(item)}}>\n"
+            f"                <button className=\"btn btn-sm btn-outline-warning me-2\" onClick={{() => editItem(item)}}>\n"
             f"                  <i className=\"bi bi-pencil-square\"></i> Editar\n"
             f"                </button>\n"
-            f"                <button className=\"btn btn-sm btn-outline-danger\" onClick={{() => deleteitem(item)}}>\n"
+            f"                <button className=\"btn btn-sm btn-outline-danger\" onClick={{() => deleteItem(item)}}>\n"
             f"                  <i className=\"bi bi-trash\"></i> Eliminar\n"
             f"                </button>\n"
             f"              </td>\n"
@@ -99,7 +100,7 @@ class ReactTable:
             f"      \n"
             f"      {{/* 🔹 Info de paginación */}}\n"
             f"      <div className=\"text-center text-muted small mt-2\">\n"
-            f"        Página {{currentPage}} de {{totalPages}} — Mostrando {{visibleitems.length}} de {{items.length}} registros\n"
+            f"        Página {{currentPage}} de {{totalPages}} — Mostrando {{visibleItems.length}} de {{{nombre}.length}} registros\n"
             f"      </div>\n"
             f"   </div>\n"
             f");\n"

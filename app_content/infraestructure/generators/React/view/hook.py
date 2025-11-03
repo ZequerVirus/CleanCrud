@@ -41,7 +41,7 @@ class ReactHook:
     def __hook(self, model: ModelEntity, nombre: str)->str:
         return (
             f"export const {nombre}Hook = () => {{\n"
-            f"  const [state, setState] = useState<UserHookProps>({{\n"
+            f"  const [state, setState] = useState<{nombre}HookProps>({{\n"
             f"    items: [],\n"
             f"    loading: false,\n"
             f"    message: '',\n"
@@ -144,7 +144,7 @@ class ReactHook:
             f"    }}\n"
             f"    const lower=value.toLowerCase();\n"
             f"    const filtered = state.items.filter((item: {nombre}Entity) => {{\n"
-            f"      return {(' ||\n').join([f'{field.nombre}.toLowerCase().includes(lower)' for field in model.fields])};\n"
+            f"      return {(' ||\n').join([f'item.{field.nombre}.toString().toLowerCase().includes(lower)' for field in model.fields])};\n"
             f"    }});\n"
             f"    setState(prev => ({{ ...prev, filtered: filtered }}));\n"
             f"  }};\n"

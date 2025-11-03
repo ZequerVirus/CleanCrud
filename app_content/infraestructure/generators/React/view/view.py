@@ -76,7 +76,7 @@ class ReactView:
             f"      </div>\n\n"
             f"      <div className=\"container py-5\">\n"
             f"        <{nombre}Table\n"
-            f"          items={{filtered}}\n"
+            f"          {nombre}={{filtered}}\n"
             f"          editItem={{(item) => {{ setShowModal(true); setEditingItem(item); }}}}\n"
             f"          deleteItem={{(item) => {{ handleDelete(item.id?.toString() ?? ''); setShowModal(false); }}}}\n"
             f"        />\n"
