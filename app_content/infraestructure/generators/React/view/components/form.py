@@ -73,9 +73,6 @@ class ReactForm:
             f"\n"
             f"return (\n"
             f"{self.__formbody(model=model, nombre=nombre, basepath=basepath)}\n"
-            f"\n"
-            # botones
-            f"{self.__formbuttons(model=model, basepath=basepath)}\n"
             f");\n"
             f"}}\n"
         )
@@ -86,15 +83,16 @@ class ReactForm:
             f"{{onCancel && (<button type=\"button\" className=\"btn btn-outline-secondary\" onClick={{\"onCancel\"}}>Cancelar</button>)}}\n"
             f"<button type=\"submit\" className=\"btn btn-primary\" onClick={{()=>handleSubmit(values)}}>{{initial{model.nombre}? \"Editar {model.nombre}\": \"Crear {model.nombre}\"}}</button>\n"
             f"</div>\n"
-            f"</form>\n"
         )
     
     def __formbody(self, model: ModelEntity, nombre: str, basepath:str)->str:
         return (
-            f"<h5 className=\"mb-3\">{{initial{model.nombre}? \"Editar {model.nombre}\": \"Crear {model.nombre}\"}}</h5>\n"
             f"<form className=\"p-4 border rounded shadow-sm bg-light\" onSubmit={{\"handleSubmit\"}}>\n"
+            f"<h5 className=\"mb-3\">{{initial{model.nombre}? \"Editar {model.nombre}\": \"Crear {model.nombre}\"}}</h5>\n"
             f"{('\n').join([f'{self.__field(model=model, basepath=basepath, name=field.nombre, typefield=field.tipo)}' 
                             for field in model.fields if field.nombre != 'id'])}\n"
+            f"{self.__formbuttons(model=model, basepath=basepath)}\n"
+            f"</form>\n"
         )
     
     def __empty(self, field: str)->str:
