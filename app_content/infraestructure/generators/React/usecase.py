@@ -45,7 +45,8 @@ class ReactUseCase:
             f"    if (Array.isArray(response.obj)) {{\n"
             f"      return response.obj.map((item: Record<string, any>) => {{\n"
             f"        return new {nombre}Entity(\n"
-            f"{',\n'.join([f"          item.{field.nombre}" for field in model.fields])});\n"
+            f"{',\n'.join([f"          item.{field.nombre}" for field in model.fields])}, \
+                item.created_at, item.updated_at, item.deleted_at);\n"
             f"        }});\n"
             f"    }} else\n{{"
             f"      return [];\n"

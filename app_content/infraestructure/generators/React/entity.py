@@ -19,8 +19,10 @@ class ReactEntity:
         
     def __entity(self, model: ModelEntity, nombre: str)->str:
         return (
-            f"export class {nombre}Entity {{  {('\n').join([f'{field.nombre}: {field.tipo if field.nombre != "id" else field.tipo+" | null"};' for field in model.fields])}\n\n"
-            f"constructor({(', ').join([f'{field.nombre}:{field.tipo if field.nombre != "id" else field.tipo+" | null"}' for field in model.fields]) }){{\n"
+            f"export class {nombre}Entity extends TimeStamp {{  {('\n').join([f'{field.nombre}: {field.tipo if field.nombre != "id" else field.tipo+" | null"};' for field in model.fields])}\n\n"
+            f"constructor({(', ').join([f'{field.nombre}:{field.tipo if field.nombre != "id" else field.tipo+" | null"}' for field in model.fields]) }, \
+                created_at: Date | null = null, updated_at:Date | null = null, deleted_at:Date | null = null){{\n"
+            f"super(created_at, updated_at, deleted_at);\n"
             f"{(' \n').join([f'this.{field.nombre} = {field.nombre};' for field in model.fields])}\n"
             f"}}\n"
             f"}}\n"
