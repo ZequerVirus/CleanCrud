@@ -44,8 +44,8 @@ class ReactForm:
             f"    const [item, setItem] = useState<{nombre}Entity>(\n"
             f"        initial{nombre} ||\n"
             f"        {{\n"
-            f"{(',\n').join([f'        {field.nombre}: {f"{self.__empty(field.tipo)}" if field.nombre != "id" else "null"}' for field in model.fields])}\n"
-            f"        }}\n"
+            # f"{(',\n').join([f'        {field.nombre}: {f"{self.__empty(field.tipo)}" if field.nombre != "id" else "null"}' for field in model.fields])}\n"
+            f"        }} as {nombre}Entity\n"
             f"    );\n"
             f"\n"
             
