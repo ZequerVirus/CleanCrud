@@ -58,7 +58,7 @@ class ReactHook:
             f"    loadItems();\n"
             f"  }}, []);\n"
 
-            f"  return {{ ...state, handleCreate, handleUpdate, handleDelete, handleSearch }};\n"
+            f"  return {{ ...state, handleCreate, handleUpdate, handleDelete, handleSearch, }};\n"
             f"}};\n"
         )
     
