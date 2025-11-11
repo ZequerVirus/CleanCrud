@@ -91,7 +91,7 @@ class FlutterBloc(Bloc):
             f"        emit(const {nombre}StateLoading());\n"
             f"        try {{\n"
             f"            emit({nombre}StateLoading());\n"
-            f"            final obj = await uc.delete('${{event.id}}');\n"
+            f"            final obj = await uc.delete(id: '${{event.id}}');\n"
             f"            emit({nombre}StateSuccess(obj:null, message: obj['success']));\n"
             f"        }} catch (e) {{\n"
             f"            emit({nombre}StateError(message:e.toString()));\n"
