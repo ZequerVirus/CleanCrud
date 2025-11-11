@@ -54,7 +54,7 @@ class FlutterState(State):
     def stateloaded(self, model:ModelEntity, nombre:str)->str:
         return (
             f"class {nombre}StateLoaded extends {nombre}State {{\n"
-            f"    final List<dynamic?> obj;\n"
+            f"    final List<dynamic> obj;\n"
             f"    const {nombre}StateLoaded({{required this.obj}});\n"
             f"    @override\n"
             f"    List<Object> get props => [obj];\n"

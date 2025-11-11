@@ -39,9 +39,9 @@ class FlutterEvent(Event):
     def loadevent(self, model: ModelEntity, nombre:str)->str:
         return (
             f"class {nombre}EventLoad extends {nombre}Event {{\n"
-            f"    final Map<String, dynamic>? filters;\n"
+            f"    final String? id;\n"
             f"    const {nombre}EventLoad(\n"
-            f"        this.filters,\n"
+            f"        this.id,\n"
             f"    );\n"
             f"    @override\n"
             f"    List<Object> get props => [];\n"

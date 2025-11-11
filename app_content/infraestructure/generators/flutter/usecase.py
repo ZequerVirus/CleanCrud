@@ -12,7 +12,7 @@ class FlutterUseCase(UseCase):
         file_path = os.path.join(path, f"{model.nombre}_usecase.dart")
         try:
             with open(file_path, 'w') as f:
-                f.write(f"{self.flutterimports(model=model, nombre=nombre)}\n")
+                # f.write(f"{self.flutterimports(model=model, nombre=nombre)}\n")
                 f.write(f"{self.usecaseclass(model=model, nombre=nombre)}\n")
         except Exception as e:
             raise Exception(e)
@@ -39,17 +39,20 @@ class FlutterUseCase(UseCase):
 
     def get(self, model:ModelEntity, nombre:str)->str:
         return (
-            f"Future<List<{nombre}?>> get({{Map<String, dynamic>? filters}}) async {{\n"
-            f"    final urlfilter = filters?.entries.map((e) => '${{e.key}}=${{e.value}}').join('&');\n"
-            f"    final response = await gateway.get('{nombre.lower()}/?${{urlfilter ?? ''}}');\n"
+            f"Future<List<{nombre}Entity?>> get({{String? id}}) async {{\n"
+            f"    try{{\n"
+            f"    final response = await gateway.get(path:'{nombre.lower()}/${{id ?? \"\"}}');\n"
             f"    final obj = response['obj'];\n"
             f"    if (obj != null || obj.isNotEmpty) {{\n"
             f"        if (obj is List) {{\n"
-            f"            return obj.map((e) => {nombre}.fromJson(e)).toList();\n"
+            f"            return obj.map((e) => {nombre}Entity.fromJson(e)).toList();\n"
             f"        }}\n"
-            f"        return [{nombre}.fromJson(obj)];\n"
+            f"        return [{nombre}Entity.fromJson(obj)];\n"
             f"    }}\n"
             f"    return [];\n"
+            f"    }} catch (e) {{\n"
+            f"     return [];\n"
+            f"    }}\n"
             f"}}\n"
         )
     
@@ -58,23 +61,42 @@ class FlutterUseCase(UseCase):
         return (
             f"Future<Map<String, dynamic>> post({{{(', ').join([f'required {field.tipo} {field.nombre}' \
             if not field.tipo.__contains__('?') else f'{field.tipo} {field.nombre}' for field in campos])}}}) async {{\n"
-            f"    final response = await gateway.post('{nombre.lower()}/', {{{(', ').join([f'\'{field.nombre}\': {field.nombre}' for field in campos])}}});\n"
+            f"    try {{\n"
+            f"    final response = await gateway.post(path:'{nombre.lower()}/', body:{{{(', ').join([f'\'{field.nombre}\': {field.nombre}' for field in campos])}}});\n"
+            f"    final obj = response['obj'];\n"
+            f"    if (obj != null || obj.isNotEmpty) {{\n"
+            f"        return {nombre}Entity.fromJson(obj);}}\n"
             f"    return response;\n"
+            f"    }} catch (e) {{\n"
+            f"    throw Error(`Error creando {model.nombre}: ${{e}}`);\n"
+            f"    }}\n"
             f"}}\n" 
         )
     
     def update(self, model:ModelEntity, nombre:str)->str:
         return (
             f"Future<Map<String, dynamic>> put({{required String id, required Map<String, dynamic> payload}}) async {{\n"
-            f"    final response = await gateway.put('{nombre.lower()}/', {{'id': id, ...payload}});\n"
+            f"    try{{\n"
+            f"    final response = await gateway.put(path:'{nombre.lower()}/', body:{{'id': id, ...payload}});\n"
+            f"    final obj = response['obj'];\n"
+            f"    if (obj != null || obj.isNotEmpty) {{\n"
+            f"        return {nombre}Entity.fromJson(obj);}}\n"
             f"    return response;\n"
+            f"    }} catch (e) {{\n"
+            f"    throw Error(`Error actualizando {model.nombre}: ${{e}}`);\n"
+            f"    }}\n"
             f"}}\n"
         )
     
     def delete(self, model:ModelEntity, nombre:str)->str:
         return (
             f"Future<Map<String, dynamic>> delete({{required String id}}) async {{\n"
-            f"    final response = await gateway.delete('{nombre.lower()}/?id=${{id}}');\n"
-            f"    return response;\n"
+            f"    try{{\n"
+            f"    final response = await gateway.delete(path:'{nombre.lower()}/?id=${{id}}');\n"
+            f"    final success = response['success'];\n"
+            f"    return success;\n"
+            f"    }} catch (e) {{\n"
+            f"    throw Error(`Error eliminando {model.nombre}: ${{e}}`);\n"
+            f"    }}\n"
             f"}}\n"
         )
