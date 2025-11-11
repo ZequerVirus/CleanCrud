@@ -52,8 +52,7 @@ class FlutterEvent(Event):
         campos = [field for field in model.fields if field.nombre != 'id']
         return (
             f"class {nombre}EventCreate extends {nombre}Event {{\n"
-            f"    {(';\n').join(f'final {field.tipo} {field.nombre}' for field in campos)}\n"
-
+            f"    {(';\n').join(f'final {field.tipo} {field.nombre}' for field in campos)};\n"
             f"    const {nombre}EventCreate({{{(',').join([f'required this.{field.nombre}' if not field.tipo.__contains__('?') else f'this.{field.nombre}' for field in campos])}}});\n"
             f"    @override\n"
             f"    List<Object> get props => [{(','.join([f'{field.nombre}' for field in campos if not field.tipo.__contains__('?')]))}];\n"

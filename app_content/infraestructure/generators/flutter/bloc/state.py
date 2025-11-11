@@ -74,9 +74,10 @@ class FlutterState(State):
     def statesuccess(self, model:ModelEntity, nombre:str)->str:
         return (
             f"class {nombre}StateSuccess extends {nombre}State {{\n"
-            f"    final String message;\n"
-            f"    const {nombre}StateSuccess({{required this.message}});\n"
+            f"    final String? message;\n"
+            f"    final dynamic obj;\n"
+            f"    const {nombre}StateSuccess({{required this.obj, this.message}});\n"
             f"    @override\n"
-            f"    List<Object> get props => [message];\n"
+            f"    List<Object> get props => [obj];\n"
             f"}}\n"
         )

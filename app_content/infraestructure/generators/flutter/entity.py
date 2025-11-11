@@ -20,7 +20,7 @@ class FlutterEntity(Entity):
                 f.write(f"DateTime? deletedAt;\n")
                 f.write(f"    {nombre}Entity({{{(', ').join([f'required this.{field.nombre}' \
                 if not field.tipo.__contains__('?') else f'this.{field.nombre}' for field in model.fields])}\n")
-                f.write(f"        this.createdAt, this.updatedAt, this.deletedAt\n")
+                f.write(f"        ,this.createdAt, this.updatedAt, this.deletedAt\n")
                 f.write(f"}}): super( createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt);\n\n")
                 f.write(f"{self.fromjson(model=model, nombre=nombre)}\n")
                 f.write(f"{self.tojson(model=model, nombre=nombre)}\n")

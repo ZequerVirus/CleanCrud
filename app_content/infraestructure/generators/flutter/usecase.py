@@ -59,31 +59,31 @@ class FlutterUseCase(UseCase):
     def create(self, model:ModelEntity, nombre:str)->str:
         campos = [field for field in model.fields if field.nombre != 'id']
         return (
-            f"Future<Map<String, dynamic>> post({{{(', ').join([f'required {field.tipo} {field.nombre}' \
+            f"Future<{nombre}Entity?> post({{{(', ').join([f'required {field.tipo} {field.nombre}' \
             if not field.tipo.__contains__('?') else f'{field.tipo} {field.nombre}' for field in campos])}}}) async {{\n"
             f"    try {{\n"
             f"    final response = await gateway.post(path:'{nombre.lower()}/', body:{{{(', ').join([f'\'{field.nombre}\': {field.nombre}' for field in campos])}}});\n"
             f"    final obj = response['obj'];\n"
-            f"    if (obj != null || obj.isNotEmpty) {{\n"
-            f"        return {nombre}Entity.fromJson(obj);}}\n"
-            f"    return response;\n"
+            f"    if (obj == null || obj.isEmpty) {{\n"
+            f"        throw Exception('Error creando {model.nombre}: ${{obj}}');}}\n"
+            f"    return {nombre}Entity.fromJson(obj);\n"
             f"    }} catch (e) {{\n"
-            f"    throw Error(`Error creando {model.nombre}: ${{e}}`);\n"
+            f"    throw Exception('Error creando {model.nombre}: ${{e}}');\n"
             f"    }}\n"
             f"}}\n" 
         )
     
     def update(self, model:ModelEntity, nombre:str)->str:
         return (
-            f"Future<Map<String, dynamic>> put({{required String id, required Map<String, dynamic> payload}}) async {{\n"
+            f"Future<{nombre}Entity?> put({{required String id, required Map<String, dynamic> payload}}) async {{\n"
             f"    try{{\n"
             f"    final response = await gateway.put(path:'{nombre.lower()}/', body:{{'id': id, ...payload}});\n"
             f"    final obj = response['obj'];\n"
-            f"    if (obj != null || obj.isNotEmpty) {{\n"
-            f"        return {nombre}Entity.fromJson(obj);}}\n"
-            f"    return response;\n"
+            f"    if (obj == null || obj.isEmpty) {{\n"
+            f"        throw Exception('Error actualizando {model.nombre}: ${{obj}}');}}\n"
+            f"        return {nombre}Entity.fromJson(obj);\n"
             f"    }} catch (e) {{\n"
-            f"    throw Error(`Error actualizando {model.nombre}: ${{e}}`);\n"
+            f"    throw Exception('Error actualizando {model.nombre}: ${{e}}');\n"
             f"    }}\n"
             f"}}\n"
         )
@@ -93,10 +93,9 @@ class FlutterUseCase(UseCase):
             f"Future<Map<String, dynamic>> delete({{required String id}}) async {{\n"
             f"    try{{\n"
             f"    final response = await gateway.delete(path:'{nombre.lower()}/?id=${{id}}');\n"
-            f"    final success = response['success'];\n"
-            f"    return success;\n"
+            f"    return response;\n"
             f"    }} catch (e) {{\n"
-            f"    throw Error(`Error eliminando {model.nombre}: ${{e}}`);\n"
+            f"    throw Exception('Error eliminando {model.nombre}: ${{e}}');\n"
             f"    }}\n"
             f"}}\n"
         )
