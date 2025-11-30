@@ -64,7 +64,7 @@ class PythonView(View):
             f"                return Response({{'failed': failed}}, status=status.HTTP_400_BAD_REQUEST)\n"
             f"        try:\n"
             f"            obj = obj_crud.create({", ".join([f'{field.nombre}=data.get(\'{field.nombre}\')' for field in campos])})\n"
-            f"            return Response({{'obj': obj.__dict__}}, status=status.HTTP_201_CREATED)\n"
+            f"            return Response(obj.__dict__, status=status.HTTP_201_CREATED)\n"
             f"        except Exception as e:\n"
             f"            return Response({{'error': str(e)}}, status=status.HTTP_400_BAD_REQUEST)\n"
             
@@ -83,7 +83,7 @@ class PythonView(View):
             f"                data = [item.__dict__ for item in obj]\n"
             f"            else:\n"
             f"                data = obj.__dict__\n"
-            f"            return Response({{'obj': data}}, status=status.HTTP_200_OK)\n"
+            f"            return Response(data, status=status.HTTP_200_OK)\n"
             f"        except Exception as e:\n"
             f"            return Response({{'error': str(e)}}, status=status.HTTP_404_NOT_FOUND)\n"
         )
@@ -100,7 +100,7 @@ class PythonView(View):
             f"                data[key] = value\n"
             f"        try:\n"
             f"            obj = obj_crud.update(request.data.get('id'), **data)\n"
-            f"            return Response({{'obj': obj.__dict__}}, status=status.HTTP_200_OK)\n"
+            f"            return Response(obj.__dict__, status=status.HTTP_200_OK)\n"
             f"        except Exception as e:\n"
             f"            return Response({{'error': str(e)}}, status=status.HTTP_400_BAD_REQUEST)\n"
         )
