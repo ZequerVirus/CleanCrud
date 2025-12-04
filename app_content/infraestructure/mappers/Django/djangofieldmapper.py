@@ -7,14 +7,17 @@ from app_content.infraestructure.mappers.Django.fieldstype import DjangoFieldTyp
 class DjangoFieldMapper(FieldMapper):
 
     def execute(self, model_name:str, model_path:str, language_to_map:str)-> list[FieldEntity]:
+        '''Retorna una lista de campos mapeados del model a otro lenguage'''
         FIELD_TYPE_MAP = self.field_type(language_to_map)
         
+        # busca el model
         path = Path(model_path)
         if not path.exists():
             raise FileNotFoundError(f"Model file {model_path} does not exist")
         
         content = path.read_text(encoding='utf-8')
 
+        # busca patrones
         class_pattern = rf"class\s+{re.escape(model_name)}\s*\(.*\)\s*:"
         class_match = re.search(class_pattern, content)
         if not class_match:
@@ -67,6 +70,7 @@ class DjangoFieldMapper(FieldMapper):
                 if is_optional:
                     # py_type = f"{py_type} | undefined"
                     py_type = f"{py_type} | null"
+            # add others languages here
             case _:
                 raise Exception("Language not supported")
         return FieldEntity(nombre=name, tipo=py_type)
