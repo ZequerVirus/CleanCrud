@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class Module(ABC):
+class Solution(ABC):
     @abstractmethod
-    def get(self)->str:
+    def execute(self,):
         pass

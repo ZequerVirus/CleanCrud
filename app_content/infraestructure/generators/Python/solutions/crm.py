@@ -1,6 +1,6 @@
-from app_content.application.interface.module import Module
+from app_content.application.interface.solution import Solution
 
-class CRM(Module):
+class CRM(Solution):
     def execute(self,):
         pass
 
