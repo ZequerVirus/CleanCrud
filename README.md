@@ -16,7 +16,7 @@ A partir de un modelo Django existente, este generador crea:
 
 ## 📦 Instalación
 
-1. Clona este repositorio o instala desde PyPI/Git (si lo has publicado).
+1. Clona este repositorio o instala desde PyPI/Git.
     Ejm: pip install git+https://github.com/ZequerVirus/CleanCrud.git
 2. Asegúrate de tener tu modelo dentro de un archivo `models.py`.
 
