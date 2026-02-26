@@ -1,6 +1,5 @@
-from app_content.application.interface.solution import Solution
-from app_content.infraestructure.generators.Python.solutions.generic import Generic
-from app_content.infraestructure.generators.Python.solutions.crm import CRM
+from app_content.infraestructure.generators.solutions.generic import Generic
+from app_content.infraestructure.generators.solutions.crm import CRM
 
 class CreateSolution():
     def __init__(self, basepath: str, name:str):

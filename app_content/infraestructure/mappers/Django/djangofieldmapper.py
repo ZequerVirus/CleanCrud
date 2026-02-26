@@ -1,4 +1,4 @@
-from app_content.application.interface.fieldmapper import FieldMapper
+from app_content.application.interface.backend.fieldmapper import FieldMapper
 from pathlib import Path
 import re
 from app_content.domain.entities.data_entity import FieldEntity

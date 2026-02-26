@@ -1,4 +1,4 @@
-from app_content.application.interface.fieldmapper import FieldType
+from app_content.application.interface.backend.fieldmapper import FieldType
 
 class DjangoFieldType(FieldType):
     PYTHON_FIELDS = {

@@ -1,26 +1,25 @@
 from django.core.management.base import BaseCommand, CommandError, CommandParser
 from app_content.application.usecases.generate_files import GenerateFiles
-from app_content.infraestructure.generators.Python.entity import PythonEntity
-from app_content.infraestructure.generators.Python.usecase import PythonUseCase
-from app_content.infraestructure.generators.Python.repository import PythonRepository
-from app_content.infraestructure.generators.Python.repositoryimpl import PythonRepositoryImpl
-from app_content.infraestructure.generators.Python.view import PythonView
+from app_content.infraestructure.generators.backend.Python.entity import PythonEntity
+from app_content.infraestructure.generators.backend.Python.usecase import PythonUseCase
+from app_content.infraestructure.generators.backend.Python.repository import PythonRepository
+from app_content.infraestructure.generators.backend.Python.repositoryimpl import PythonRepositoryImpl
+from app_content.infraestructure.generators.backend.Python.view import PythonView
 
 import os
 import traceback
 from app_content.infraestructure.mappers.Django.djangofieldmapper import DjangoFieldMapper
-from app_content.infraestructure.mappers.Django.fieldstype import DjangoFieldType
-from app_content.infraestructure.generators.flutter.bloc.bloc import FlutterBloc
-from app_content.infraestructure.generators.flutter.bloc.event import FlutterEvent
-from app_content.infraestructure.generators.flutter.bloc.state import FlutterState
-from app_content.infraestructure.generators.flutter.usecase import FlutterUseCase
-from app_content.infraestructure.generators.flutter.entity import FlutterEntity
-from app_content.infraestructure.generators.React.entity import ReactEntity
-from app_content.infraestructure.generators.React.view.view import ReactView
-from app_content.infraestructure.generators.React.view.components.form import ReactForm
-from app_content.infraestructure.generators.React.view.components.table import ReactTable
-from app_content.infraestructure.generators.React.view.hook import ReactHook
-from app_content.infraestructure.generators.React.usecase import ReactUseCase
+from app_content.infraestructure.generators.mobile.flutter.bloc.bloc import FlutterBloc
+from app_content.infraestructure.generators.mobile.flutter.bloc.event import FlutterEvent
+from app_content.infraestructure.generators.mobile.flutter.bloc.state import FlutterState
+from app_content.infraestructure.generators.mobile.flutter.usecase import FlutterUseCase
+from app_content.infraestructure.generators.mobile.flutter.entity import FlutterEntity
+from app_content.infraestructure.generators.frontend.React.entity import ReactEntity
+from app_content.infraestructure.generators.frontend.React.view.view import ReactView
+from app_content.infraestructure.generators.frontend.React.view.components.form import ReactForm
+from app_content.infraestructure.generators.frontend.React.view.components.table import ReactTable
+from app_content.infraestructure.generators.frontend.React.view.hook import ReactHook
+from app_content.infraestructure.generators.frontend.React.usecase import ReactUseCase
 
 class Command(BaseCommand):
     help = 'Generate CRUD clean architecture using a model'
@@ -46,14 +45,7 @@ class Command(BaseCommand):
         if not os.path.exists(base_path):
             raise CommandError(f"❌ Base path {base_path} does not exist")
 
-        fieldmapper = None
-        match mapper:
-            case 'django':
-                fieldmapper = DjangoFieldMapper()
-            # anadir mas mappers
-            
-            case _:
-                raise CommandError(f"❌ Mapper {mapper} is not supported")
+        fieldmapper = self._setFieldMapper(mapper)
 
         match language:
             case 'python':
@@ -128,3 +120,16 @@ class Command(BaseCommand):
             case _:
                 raise CommandError(f"❌ Language {language} is not supported")
             
+    def _setFieldMapper(self, mapper):
+        fieldmapper = None
+        try:
+            match mapper:
+                case 'django':
+                    fieldmapper = DjangoFieldMapper()
+                # anadir mas mappers
+                case _:
+                    raise CommandError(f"❌ Mapper {mapper} is not supported")
+            return fieldmapper
+        except Exception as e:
+            tb = traceback.format_exc()
+            raise CommandError(f"Error generating files: {e}\n{tb}")

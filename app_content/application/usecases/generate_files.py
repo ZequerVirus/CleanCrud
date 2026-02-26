@@ -1,8 +1,8 @@
 from app_content.domain.entities.model_entity import ModelEntity
-from app_content.application.interface.fieldmapper import FieldMapper, FieldType
-from typing import Any
+from app_content.application.interface.backend.fieldmapper import FieldMapper
 
 class GenerateFiles:
+    ''' Generate the files from model '''
     def __init__(
             self, 
             model_name: str,
@@ -13,6 +13,15 @@ class GenerateFiles:
             **kwargs, 
             # entity: Entity, 
         ):
+        '''
+        Args:
+            model_name (str): The name of the model
+            model_path (str): The path of the model
+            base_path (str): The base path to generate the files
+            fieldmapper (FieldMapper): The field mapper
+            language_to_map (str): The language to map
+            kwargs (dict): The generators ex: { "repository": Repository(), "entity": Entity() }
+        '''
         # self.dto = dto
         self.model_name = model_name
         self.model_path = model_path
@@ -33,10 +42,12 @@ class GenerateFiles:
             for key, generator in self.generators.items():
                 print(f'Generando {key}...')
                 if (hasattr(generator, 'execute') and callable(generator.execute)):
-                    generator.execute(model=model, basepath=self.base_path,)
+                    generator.model = model
+                    generator.basepath = self.base_path
+                    generator.execute()
                 else:
                     raise Exception(f'Generator {key} does not have execute method')
-            # self.entity.execute(model=model, basepath=self.base_path,)
+            # self.entity.execute()
         except Exception as e:
             raise Exception(e)
         
